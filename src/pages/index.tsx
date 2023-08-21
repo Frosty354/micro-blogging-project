@@ -26,8 +26,12 @@ export default function Home() {
           />
         </div>
       </main>}
-      <LandingSection/>
-      <PostForm/>
+      {session.data &&
+        <>
+        <LandingSection/>
+        <PostForm/>
+        </>
+      }
       
     </>
   )
