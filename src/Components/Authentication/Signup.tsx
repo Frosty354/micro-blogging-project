@@ -38,6 +38,7 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
           password:password,
           created_on: new Date().toISOString(),
           last_login:null
+          //have to add following and followers
         }
         
         try {
