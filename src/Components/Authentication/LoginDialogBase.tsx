@@ -50,14 +50,14 @@ export interface SimpleDialogProps {
     }
     
     const sess=useSession();
-      console.log(sess);
+      // console.log(sess);
     
   
     return (
       <Dialog onClose={handleClose} open={open}>
         
             <TabContext value={tabValue}>
-              <TabList onChange={handleTabValue} aria-label="lab API tabs example">
+              <TabList onChange={handleTabValue} aria-label="lab API tabs example" className="pl-28">
                   <Tab label="Login" value="login" />
                   <Tab label="Signup" value="signup" />
                   
@@ -70,10 +70,7 @@ export interface SimpleDialogProps {
             <TabPanel value='signup'>
                   <Signup providerList={emails} handleClose={handleClose} />
             </TabPanel>
-            </TabContext>
-        
-        
-                
+            </TabContext>               
       </Dialog>
     );
   }

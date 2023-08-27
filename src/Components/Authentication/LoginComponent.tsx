@@ -3,6 +3,9 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { blue } from '@mui/material/colors'
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, selectUser } from '../../redux/userSlice';
+import { AppThunk, RootState } from '../../redux/store';
 
 
 type ProviderListType = {
@@ -20,12 +23,40 @@ const LoginComponent = ({providerList,handleClose}:ProviderListType) => {
 
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
+    const user = useSelector(selectUser);
+    const dispatch = useDispatch();
+    
 
     const handleListItemClick = (value: string) => {
         signIn();
-      };
-      const HandleLogin=()=>{
-      
+    };
+      const HandleLogin=async(e:any)=>{
+        e.preventDefault();
+        const userObj={
+          user_name:username,
+          password:password,
+        }
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_LEON_API}/users/verifyUser/`,{
+            method:'POST',
+            body:JSON.stringify(userObj),
+            headers: {"Content-Type":"application/json"},
+          })
+          
+         
+          if (response.ok) {
+            const responseData = await response.json();
+            dispatch(setUser(responseData));
+            handleClose();
+            
+          } else {
+            console.error('Request failed:', response.status);
+          }
+        } catch (error) {
+          console.log(error)
+        }
+          
+          
       }
       
   return (
@@ -54,12 +85,14 @@ const LoginComponent = ({providerList,handleClose}:ProviderListType) => {
                     <TextField 
                       type='text' 
                       value={username} 
+                      placeholder='Enter Username'
                       className='p-4'
                       onChange={(e)=>setUsername(e.target.value)}
                     />
                     <TextField 
                       type='password' 
                       value={password}
+                      placeholder='Enter Password'
                       className='p-4'
                       onChange={(e)=>setPassword(e.target.value)}
                     />

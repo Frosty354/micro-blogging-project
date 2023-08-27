@@ -1,11 +1,14 @@
 import { Link,Button, TextField } from '@mui/material';
 import { useSession,signIn,signOut } from 'next-auth/react';
-import React, { Children, useState } from 'react'
+import React, { Children, useEffect, useState } from 'react'
 import LoginDialogBase from './Authentication/LoginDialogBase';
+import { selectIsAuthenticated, selectUser } from '@/redux/userSlice';
+import { useSelector } from 'react-redux';
 
 const HomepageLayout= () => {
   const session=useSession();
-
+  const user = useSelector(selectUser);
+  const isAuthencated=useSelector(selectIsAuthenticated);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -16,6 +19,11 @@ const HomepageLayout= () => {
     setOpen(false);
 
   };
+
+
+   
+
+  
   return (
     <div>
       <nav className='bg-black text-white py-5
@@ -25,7 +33,7 @@ const HomepageLayout= () => {
           
             
         {//@ts-ignore
-          session.data?<><div>Hello {session.data?.user?.name}</div><Button onClick={signOut}>Logout</Button></>:
+          isAuthencated?<><div>Hello {user?.first_name}</div><Button onClick={signOut}>Logout</Button></>:
           // <Button onClick={signIn}>login</Button>
           <Button onClick={handleClickOpen}>Login</Button>
         }

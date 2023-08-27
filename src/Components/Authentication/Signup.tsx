@@ -1,9 +1,13 @@
+'use client'
 import { Avatar, Button, ListItem, ListItemAvatar, ListItemButton, ListItemText, SvgIconTypeMap, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { blue } from "@mui/material/colors";
 import { signIn, useSession } from 'next-auth/react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import CheckIcon from '@mui/icons-material/Check';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, selectUser } from '../../redux/userSlice';
+import { AppThunk, RootState } from '../../redux/store';
 
 
 type ProviderListType = {
@@ -22,7 +26,12 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
     const [password,setPassword]=useState("");
     const [passwordConfirm,setPasswordConfirm]=useState("");
     const[firstName,setFirstname]=useState("");
-    const {status,update}=useSession();
+    const user = useSelector(selectUser);
+    const dispatch = useDispatch();
+
+    const {data,status,update}=useSession();
+
+
     const handleListItemClick = (value: string) => {
         signIn();
       };
@@ -37,8 +46,10 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
           user_email:userEmail,
           password:password,
           created_on: new Date().toISOString(),
-          last_login:null
-          //have to add following and followers
+          last_login:null,
+          following:[],
+          followers:[],
+          post_ids:[]
         }
         
         try {
@@ -49,8 +60,19 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
           })
           const responseData = await response.json();
           console.log(responseData);
-         
-          update({ status: 'authenticated' })
+          // const user = userObj; // Replace with actual user data
+          const newUser={
+            user_name:userObj.user_name,
+            first_name:userObj.first_name,
+            auth_measure:userObj.auth_measure,
+            user_email:userObj.user_email,
+            created_on: userObj.created_on,
+            last_login:userObj.last_login,
+            following:userObj.following,
+            followers:userObj.followers,
+            post_ids:userObj.post_ids
+          }
+          dispatch(setUser(newUser));
           handleClose();
         } catch (error) {
           console.error(error)
@@ -81,7 +103,7 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
       
   return (
     <div className='block'>
-        <div className='flex px-10 py-6'>
+        <div className='flex px-10'>
                       {providerList.map((email,index) => (
                         <ListItem key={index} disableGutters>
                           <ListItemButton onClick={()=>handleListItemClick(email.value)} key={email.provider}>
