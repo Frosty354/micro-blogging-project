@@ -19,12 +19,8 @@ const PostForm = () => {
     const handlePost=()=>{
         
         console.log(value);
-        const postObj={
-          username:data?.user?.name,
-          email:data?.user?.email,
-          post:value,
-          time:Date.UTC
-        }
+        
+        
         setValue("");
     }
   return (
