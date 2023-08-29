@@ -53,7 +53,7 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
         }
         
         try {
-          const response=await fetch(`${process.env.NEXT_PUBLIC_LEON_API}/users/postUser/`,{
+          const response=await fetch(`${process.env.NEXT_PUBLIC_LEON_API}/users/createUser/`,{
             method:"POST",
             body:JSON.stringify(userObj),
             headers: { "Content-Type": "application/json" },
@@ -61,7 +61,10 @@ const Signup = ({providerList,handleClose}:ProviderListType) => {
           const responseData = await response.json();
           console.log(responseData);
           // const user = userObj; // Replace with actual user data
+
+
           const newUser={
+            user_id:responseData?.user_id,
             user_name:userObj.user_name,
             first_name:userObj.first_name,
             auth_measure:userObj.auth_measure,
