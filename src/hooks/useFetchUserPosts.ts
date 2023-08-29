@@ -1,7 +1,5 @@
 import react, { useEffect, useState } from 'react';
 
-
-
 function useFetchUserPosts(user_id:number | undefined){
     const [posts,setPosts]=useState([]);
     const [loading,setLoading]=useState(false);
