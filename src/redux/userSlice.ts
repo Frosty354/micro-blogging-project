@@ -8,6 +8,7 @@ interface UserState {
 }
 
 interface User {
+  user_id: number,
   user_name: string;
   first_name: string;
   auth_measure: string;
