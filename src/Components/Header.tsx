@@ -4,6 +4,8 @@ import React, { Children, useEffect, useState } from 'react'
 import LoginDialogBase from './Authentication/LoginDialogBase';
 import { selectIsAuthenticated, selectUser } from '@/redux/userSlice';
 import { useSelector } from 'react-redux';
+import SearchBar from '../Components/SearchBar'
+
 
 const HomepageLayout= () => {
   const session=useSession();
@@ -30,7 +32,7 @@ const HomepageLayout= () => {
                 flex justify-between px-10'>
         <h1 className='text-5xl'>Leon</h1>
         <div className='flex items-center gap-6'>
-          
+          <SearchBar/>
             
         {//@ts-ignore
           isAuthencated?<><div>Hello {user?.first_name}</div><Button onClick={signOut}>Logout</Button></>:

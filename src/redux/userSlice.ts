@@ -15,9 +15,9 @@ interface User {
   user_email: string;
   created_on: string;
   last_login: string | null;
-  following: number[];
-  followers: number[];
-  post_ids: number[];
+  // following: number[];
+  // followers: number[];
+  // post_ids: number[];
 }
 
 const initialState: UserState = {

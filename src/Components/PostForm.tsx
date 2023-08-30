@@ -7,23 +7,29 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '@/redux/userSlice';
 import useFetchUserPosts from '@/hooks/useFetchUserPosts';
 import formatDate from '@/utils/formatDate';
+import PostCardList from './CommonItems/PostCardList';
+import LandingSection from './LandingSection';
 
 
-type PostType={
-  isparentpost: Boolean;
-  made_by: String;
-  post_content:String;
-  post_id:Number;
-  reactions:[];
-  replies:[];
+type PostType = {
+  isparentpost: boolean;
+  made_by: string;
+  post_content: string;
+  post_id: number;
+  reactions: [];
+ 
   time_created: Date;
-  user_id:Number;
-}
+  user_id: number;
+};
+
+type PostCardProps = {
+postList: PostType[];
+};
 
 
 const PostForm = () => {
     const [value, setValue] = useState("");
-    const [postList,setPostList]=useState<any>([])
+    const [postList,setPostList]=useState<PostType[]>([])
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const session=useSession();
     const user = useSelector(selectUser);
@@ -35,7 +41,7 @@ const PostForm = () => {
     };
 
 
-    console.log(user?.user_id)
+    
     const {posts} = useFetchUserPosts(user?.user_id);
 
     useEffect(() => {
@@ -52,7 +58,7 @@ const PostForm = () => {
           post_content:value, 
           reactions:[], 
           isparentpost:true, 
-          replies:[], 
+          
           time_created:new Date().toISOString(),
         }
         try {
@@ -62,9 +68,14 @@ const PostForm = () => {
             headers:{"Content-Type":"application/json"}
           })
           
-          console.log(value);
-          setValue("");
-          setPostList([postObj, ...postList]);
+          if(response.ok){
+            const resukt = await response.json();
+            setValue("");
+            Object.assign(postObj,{post_id:resukt});
+            console.log(postObj);
+            //@ts-ignore
+            setPostList([postObj, ...postList]);
+          }
 
         } catch (error) {
           console.log(error);
@@ -75,49 +86,29 @@ const PostForm = () => {
     
     
   return (
-    <>
-    <div className='flex justify-center py-10'>
-        <FormGroup >
-        <textarea
-            id="review-text"
-            onChange={handleChange}
-            placeholder="What is happening?!"
-            ref={textAreaRef}
-            rows={5}
-            className='rounded-md border-blue-900 placeholder:text-gray-500 w-96 px-5 py-2  '
-            value={value}
-        />
-            <Button disabled={value===""} type='submit' onClick={handlePost}>Post</Button>
-        </FormGroup>
-        
-    </div>
-    
-      <div className='flex justify-center' >
-          <div>
-            {postList.length?postList.map((item:PostType,index: React.Key | null | undefined)=>{
-            return <Card 
-                    key={index} 
-                    
-                    sx={{
-                    height:'auto',
-                    width:'350px',
-                    p:6,
-                    m:4,
-                    display:'flex',
-                    justifyContent:'center',
-                    flexDirection:'column'
-                  }}>
-                    <div >
-                      <sub>{item.made_by}</sub>
-                      
-                    </div>
-                    <Typography sx={{pt:4,pb:2}}>{item.post_content}</Typography>
-                    <sub>{formatDate(item.time_created)}</sub>
-                  </Card>
-          }):<div>your wall is empty post something</div>}
-          </div>
+    <div className='ml-10'>
+    <LandingSection/>
+      <div className='flex justify-center border-2 border-solid p-4' >
+      
+        <div>
+          <FormGroup >
+              <textarea
+                  id="review-text"
+                  onChange={handleChange}
+                  placeholder="What is happening?!"
+                  ref={textAreaRef}
+                  rows={5}
+                  className='rounded-md border-blue-900 placeholder:text-gray-500 w-96 px-5 py-2 flex justify-center border border-solid '
+                  value={value}
+              />
+              <Button disabled={value===""} type='submit' onClick={handlePost}>Post</Button>
+          </FormGroup>
+            {postList.length?
+            <PostCardList postList={postList}/>
+          :<div>your wall is empty post something</div>}
       </div>
-    </>
+      </div>
+    </div>
   )
 }
 

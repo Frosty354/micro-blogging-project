@@ -7,6 +7,10 @@ import PostForm from '@/Components/PostForm';
 import LandingSection from '@/Components/LandingSection';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '@/redux/userSlice';
+import OtherUsers from '@/Components/OtherUsers';
+import AccountInfo from '@/Components/AccountInfo';
+
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -29,10 +33,19 @@ export default function Home() {
           />
         </div>
       </main>}
-      {session.data||isAuthencated &&
+      {isAuthencated &&
         <>
-        <LandingSection/>
-        <PostForm/>
+        {/* <LandingSection/> */}
+        
+        <div className='flex justify-between'>
+          <div className='flex justify-start'>
+            <AccountInfo/>
+          </div>
+          <PostForm/>
+          <div className='flex justify-end'>
+            <OtherUsers/>
+          </div>
+        </div>
         </>
       }
       
