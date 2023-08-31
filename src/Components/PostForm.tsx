@@ -9,6 +9,7 @@ import useFetchUserPosts from '@/hooks/useFetchUserPosts';
 import formatDate from '@/utils/formatDate';
 import PostCardList from './CommonItems/PostCardList';
 import LandingSection from './LandingSection';
+import useGetFeed from '@/hooks/useGetFeed';
 
 
 type PostType = {
@@ -33,7 +34,7 @@ const PostForm = () => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const session=useSession();
     const user = useSelector(selectUser);
-    useAutoSizeTextArea(textAreaRef.current, value);
+    useAutoSizeTextArea(textAreaRef.current, value,"160px","500px");
     const {data}=session;
     const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = evt.target?.value;
@@ -43,13 +44,13 @@ const PostForm = () => {
 
     
     const {posts} = useFetchUserPosts(user?.user_id);
-
+    const {feeds}=useGetFeed(user?.user_id);
     useEffect(() => {
       setPostList(posts);
     }, [posts])
     
 
-
+    console.log("check 1",feeds)
     const handlePost= async()=>{
         
         const postObj={
@@ -58,7 +59,6 @@ const PostForm = () => {
           post_content:value, 
           reactions:[], 
           isparentpost:true, 
-          
           time_created:new Date().toISOString(),
         }
         try {
@@ -103,9 +103,10 @@ const PostForm = () => {
               />
               <Button disabled={value===""} type='submit' onClick={handlePost}>Post</Button>
           </FormGroup>
-            {postList.length?
+            <PostCardList postList={feeds}/>
+            {/* {postList.length?
             <PostCardList postList={postList}/>
-          :<div>your wall is empty post something</div>}
+          :<div>your wall is empty post something</div>} */}
       </div>
       </div>
     </div>
