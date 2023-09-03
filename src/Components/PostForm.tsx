@@ -86,7 +86,7 @@ const PostForm = () => {
     
     
   return (
-    <div className='ml-10'>
+    <div className='ml-6'>
     <LandingSection/>
       <div className='flex justify-center border-2 border-solid p-4' >
       
