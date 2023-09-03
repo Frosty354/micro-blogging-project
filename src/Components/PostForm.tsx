@@ -50,7 +50,6 @@ const PostForm = () => {
     }, [posts])
     
 
-    console.log("check 1",feeds)
     const handlePost= async()=>{
         
         const postObj={

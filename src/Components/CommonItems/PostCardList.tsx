@@ -28,7 +28,7 @@ postList: PostType[];
 };
 
 const PostCardList = ({ postList }: PostCardProps) => {
-    console.log(postList)
+  
   return (
         <div className='border-4 solid'>
         {postList.map((item,index)=>{
